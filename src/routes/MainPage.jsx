@@ -1,15 +1,39 @@
 import { Link, Outlet } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../assets/logo.svg";
 import cart from "../assets/cart-shopping-solid.svg";
 import ProductsPage from "./ProductsPage";
 import ShoppingCart from "./ShoppingCart";
+import CatagoriesBar from "./CatagoriesBar";
 
 const MainPage = () => {
   const [shoppingCart, setShoppingCart] = useState([]);
 
   const { page } = useParams();
+
+  function checkStorage() {
+    if (!localStorage.getItem("localShoppingCart")) {
+      setLocalShoppingCart();
+    } else {
+      getLocalShoppingCart();
+    }
+  }
+
+  function setLocalShoppingCart() {
+    localStorage.setItem("localShoppingCart", []);
+  }
+
+  function getLocalShoppingCart() {
+    let localShoppingCart = JSON.parse(
+      localStorage.getItem("localShoppingCart")
+    );
+    setShoppingCart(localShoppingCart);
+  }
+
+  useEffect(() => {
+    checkStorage();
+  }, []);
 
   return (
     <>
@@ -29,22 +53,25 @@ const MainPage = () => {
         </div>
       </div>
       <div className="fullBody">
-        {page === "productsPage" ? (
-          <ProductsPage
-            shoppingCart={shoppingCart}
-            setShoppingCart={setShoppingCart}
-          />
-        ) : page === "shoppingCart" ? (
-          <ShoppingCart
-            shoppingCart={shoppingCart}
-            setShoppingCart={setShoppingCart}
-          />
-        ) : (
-          <ProductsPage
-            shoppingCart={shoppingCart}
-            setShoppingCart={setShoppingCart}
-          />
-        )}
+        <CatagoriesBar />
+        <div className="productsOrCart">
+          {page === "productsPage" ? (
+            <ProductsPage
+              shoppingCart={shoppingCart}
+              setShoppingCart={setShoppingCart}
+            />
+          ) : page === "shoppingCart" ? (
+            <ShoppingCart
+              shoppingCart={shoppingCart}
+              setShoppingCart={setShoppingCart}
+            />
+          ) : (
+            <ProductsPage
+              shoppingCart={shoppingCart}
+              setShoppingCart={setShoppingCart}
+            />
+          )}
+        </div>
       </div>
     </>
   );

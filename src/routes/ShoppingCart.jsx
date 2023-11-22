@@ -1,7 +1,19 @@
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import "../styles/shoppingCart.css";
 
 const ShoppingCart = ({ shoppingCart, setShoppingCart }) => {
+  const [shoppingCartTotal, setShoppingCartTotal] = useState(0);
+
+  useEffect(() => {
+    let currentCartTotal = 0;
+    for (let i = 0; i < shoppingCart.length; i++) {
+      currentCartTotal =
+        currentCartTotal + shoppingCart[i].price * shoppingCart[i].quantity;
+    }
+    currentCartTotal = currentCartTotal.toFixed(2);
+    setShoppingCartTotal(currentCartTotal);
+  }, [shoppingCart]);
+
   function handleQuantityChange(index) {
     return (e) => {
       const currentShoppingCartItem = shoppingCart[index];
@@ -12,6 +24,7 @@ const ShoppingCart = ({ shoppingCart, setShoppingCart }) => {
       setShoppingCart((prevState) => {
         const nextState = [...prevState];
         nextState[index] = replacementShoppingCart;
+        localStorage.setItem("localShoppingCart", JSON.stringify(nextState));
         return nextState;
       });
     };
@@ -27,6 +40,7 @@ const ShoppingCart = ({ shoppingCart, setShoppingCart }) => {
       setShoppingCart((prevState) => {
         const nextState = [...prevState];
         nextState[index] = replacementShoppingCart;
+        localStorage.setItem("localShoppingCart", JSON.stringify(nextState));
         return nextState;
       });
     };
@@ -43,6 +57,7 @@ const ShoppingCart = ({ shoppingCart, setShoppingCart }) => {
       setShoppingCart((prevState) => {
         const nextState = [...prevState];
         nextState[index] = replacementShoppingCart;
+        localStorage.setItem("localShoppingCart", JSON.stringify(nextState));
         return nextState;
       });
     };
@@ -52,7 +67,18 @@ const ShoppingCart = ({ shoppingCart, setShoppingCart }) => {
     return () => {
       let currentShoppingCart = [...shoppingCart];
       currentShoppingCart.splice(index, 1);
+      localStorage.setItem(
+        "localShoppingCart",
+        JSON.stringify(currentShoppingCart)
+      );
       setShoppingCart(currentShoppingCart);
+    };
+  }
+
+  function handleEmpty() {
+    return () => {
+      localStorage.setItem("localShoppingCart", JSON.stringify([]));
+      setShoppingCart([]);
     };
   }
 
@@ -67,22 +93,28 @@ const ShoppingCart = ({ shoppingCart, setShoppingCart }) => {
           <h2 className="column3 cell">Quantity</h2>
           <h2 className="column4 cell">Subtotal</h2>
         </div>
+        <div className="emptyCart">
+          {shoppingCart.length ? "" : <p>No Items in Cart</p>}
+        </div>
         {shoppingCart.map((item, index) => {
-          const subtotal = item.price * item.quantity;
+          let subtotal = item.price * item.quantity;
+          subtotal = subtotal.toFixed(2);
+          let itemPrice = item.price;
+          itemPrice = itemPrice.toFixed(2);
           const currentIndex = index;
           return (
-            <div key={item.title} className="cartItem">
-              <h3 className="column0 cell">
+            <div key={item.id} className="cartItem">
+              <p className="column0 cell itemCell">
                 <button
                   className="deleteButton"
                   onClick={handleDelete(currentIndex)}
                 >
                   X
                 </button>
-              </h3>
-              <h3 className="column1 cell">{item.title}</h3>
-              <h3 className="column2 cell">${item.price}</h3>
-              <div className="column3 cell">
+              </p>
+              <p className="column1 cell itemCell">{item.title}</p>
+              <p className="column2 cell itemCell">${itemPrice}</p>
+              <div className="column3 itemCell cell">
                 <button
                   className="lessArrow"
                   onClick={handleDecreasedQuantity(currentIndex)}
@@ -103,10 +135,29 @@ const ShoppingCart = ({ shoppingCart, setShoppingCart }) => {
                 </button>
               </div>
 
-              <h3 className="column4 cell">${subtotal}</h3>
+              <p className="column4 cell itemCell">${subtotal}</p>
             </div>
           );
         })}
+      </div>
+      <div className="cartTotal">
+        <h2 className="cartTotalTitle">Cart Total</h2>
+        <div className="cartTotalBox">
+          <div className="row1">
+            <h2 className="lowerCell cellTitle">Subtotal</h2>
+            <p className="lowerCell">${shoppingCartTotal}</p>
+          </div>
+          <div className="row2">
+            <h2 className="lowerCell cellTitle">Total</h2>
+            <p className="lowerCell">${shoppingCartTotal}</p>
+          </div>
+        </div>
+      </div>
+      <div className="checkoutButtonBox">
+        <button className="emptyButton" onClick={handleEmpty()}>
+          Empty Cart
+        </button>
+        <button className="emptyButton">Checkout</button>
       </div>
     </div>
   );

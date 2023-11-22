@@ -11,9 +11,8 @@ const ProductsPage = ({ shoppingCart, setShoppingCart }) => {
     <div className="mainPage">
       {productInfo.map((tile, index) => {
         return (
-          <>
+          <div key={tile.id}>
             <Tile
-              key={tile.id}
               tile={tile}
               image={tile.image}
               title={tile.title}
@@ -22,7 +21,7 @@ const ProductsPage = ({ shoppingCart, setShoppingCart }) => {
               shoppingCart={shoppingCart}
               setShoppingCart={setShoppingCart}
             />
-          </>
+          </div>
         );
       })}
     </div>
