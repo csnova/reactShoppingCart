@@ -5,7 +5,6 @@ import logo from "../assets/logo.svg";
 import cart from "../assets/cart-shopping-solid.svg";
 import ProductsPage from "./ProductsPage";
 import ShoppingCart from "./ShoppingCart";
-import CatagoriesBar from "./CatagoriesBar";
 
 const MainPage = () => {
   const [shoppingCart, setShoppingCart] = useState([]);
@@ -53,7 +52,6 @@ const MainPage = () => {
         </div>
       </div>
       <div className="fullBody">
-        <CatagoriesBar />
         <div className="productsOrCart">
           {page === "productsPage" ? (
             <ProductsPage

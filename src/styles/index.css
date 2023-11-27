@@ -87,18 +87,13 @@ body {
 
 .fullBody {
   display: flex;
-}
-.sideBar {
-  max-width: 500px;
-  flex: 1;
+  flex-direction: row;
 }
 
 .productsOrCart {
-  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px;
 }
 
 .mainPage {
