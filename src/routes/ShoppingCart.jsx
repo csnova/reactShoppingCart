@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import "../styles/shoppingCart.css";
 
 const ShoppingCart = ({ shoppingCart, setShoppingCart }) => {
-  const [shoppingCartTotal, setShoppingCartTotal] = useState(0);
-
-  useEffect(() => {
+  const totalPrice = useMemo(() => {
     let currentCartTotal = 0;
     for (let i = 0; i < shoppingCart.length; i++) {
       currentCartTotal =
         currentCartTotal + shoppingCart[i].price * shoppingCart[i].quantity;
     }
     currentCartTotal = currentCartTotal.toFixed(2);
-    setShoppingCartTotal(currentCartTotal);
+    return currentCartTotal;
   }, [shoppingCart]);
 
   function handleQuantityChange(index) {
@@ -145,11 +143,11 @@ const ShoppingCart = ({ shoppingCart, setShoppingCart }) => {
         <div className="cartTotalBox">
           <div className="row1">
             <h2 className="lowerCell cellTitle">Subtotal</h2>
-            <p className="lowerCell">${shoppingCartTotal}</p>
+            <p className="lowerCell">${totalPrice}</p>
           </div>
           <div className="row2">
             <h2 className="lowerCell cellTitle">Total</h2>
-            <p className="lowerCell">${shoppingCartTotal}</p>
+            <p className="lowerCell">${totalPrice}</p>
           </div>
         </div>
       </div>
